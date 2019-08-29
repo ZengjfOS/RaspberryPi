@@ -199,8 +199,9 @@ int main(int argc, char **argv, char **envp)
 
 
 
-	if (argc < 2) {
-		printf("Usage: gpioIrq <gpio-pin>\n\n");
+	if (argc < 3) {
+		printf("Usage: gpioIrq <gpio-pin> <irq type>\n");
+		printf("    irq type:  rising/falling/bath\n");
 		printf("Waits for a change in the GPIO pin voltage level or input on stdin\n");
 		exit(-1);
 	}
@@ -209,7 +210,7 @@ int main(int argc, char **argv, char **envp)
 
 	gpio_export(gpio);
 	gpio_set_dir(gpio, 0);
-	gpio_set_edge(gpio, "both");
+	gpio_set_edge(gpio, argv[2]);
 	gpio_fd = gpio_fd_open(gpio);
 
 	timeout = POLL_TIMEOUT;

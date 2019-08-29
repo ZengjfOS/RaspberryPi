@@ -3,6 +3,11 @@
 ## Usage
 
 ```
-./gpioIrq <GPIO-Number>
+./gpioIrq <GPIO-Number> <irq type>
 ```
+
+* riq type
+  * rising
+  * falling
+  * both
 
