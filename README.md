@@ -6,4 +6,5 @@
 * stream.py: ip camera
 * face.py: ip camera with face detect
 * haarcascade\_frontalface\_alt.xml: opencv face detect module
+* simulation.py: image replace the camera
 
