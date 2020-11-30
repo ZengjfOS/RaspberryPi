@@ -12,13 +12,16 @@
 #include <sys/mman.h>
 #include <unistd.h>
 
-#include <log/log.h>
-
 #include "binder.h"
 
 #define MAX_BIO_SIZE (1 << 30)
 
-#define TRACE 0
+#define ALOGI(x...) fprintf(stderr, "svcmgr: " x)
+#define ALOGE(x...) fprintf(stderr, "svcmgr: " x)
+// inline int android_errorWriteLog(int tag, const char* data) { return 0; };
+int android_errorWriteLog(int tag, const char* data) { return 0; };
+
+#define TRACE 1
 
 void bio_init_from_txn(struct binder_io *io, struct binder_transaction_data *txn);
 
@@ -146,19 +149,7 @@ void binder_close(struct binder_state *bs)
 
 int binder_become_context_manager(struct binder_state *bs)
 {
-    struct flat_binder_object obj;
-    memset(&obj, 0, sizeof(obj));
-    obj.flags = FLAT_BINDER_FLAG_TXN_SECURITY_CTX;
-
-    int result = ioctl(bs->fd, BINDER_SET_CONTEXT_MGR_EXT, &obj);
-
-    // fallback to original method
-    if (result != 0) {
-        android_errorWriteLog(0x534e4554, "121035042");
-
-        result = ioctl(bs->fd, BINDER_SET_CONTEXT_MGR, 0);
-    }
-    return result;
+    return ioctl(bs->fd, BINDER_SET_CONTEXT_MGR, 0);
 }
 
 int binder_write(struct binder_state *bs, void *data, size_t len)
@@ -252,28 +243,13 @@ int binder_parse(struct binder_state *bs, struct binder_io *bio,
 #endif
             ptr += sizeof(struct binder_ptr_cookie);
             break;
-        case BR_TRANSACTION_SEC_CTX:
         case BR_TRANSACTION: {
-            struct binder_transaction_data_secctx txn;
-            if (cmd == BR_TRANSACTION_SEC_CTX) {
-                if ((end - ptr) < sizeof(struct binder_transaction_data_secctx)) {
-                    ALOGE("parse: txn too small (binder_transaction_data_secctx)!\n");
-                    return -1;
-                }
-                memcpy(&txn, (void*) ptr, sizeof(struct binder_transaction_data_secctx));
-                ptr += sizeof(struct binder_transaction_data_secctx);
-            } else /* BR_TRANSACTION */ {
-                if ((end - ptr) < sizeof(struct binder_transaction_data)) {
-                    ALOGE("parse: txn too small (binder_transaction_data)!\n");
-                    return -1;
-                }
-                memcpy(&txn.transaction_data, (void*) ptr, sizeof(struct binder_transaction_data));
-                ptr += sizeof(struct binder_transaction_data);
-
-                txn.secctx = 0;
+            struct binder_transaction_data *txn = (struct binder_transaction_data *) ptr;
+            if ((end - ptr) < sizeof(*txn)) {
+                ALOGE("parse: txn too small!\n");
+                return -1;
             }
-
-            binder_dump_txn(&txn.transaction_data);
+            binder_dump_txn(txn);
             if (func) {
                 unsigned rdata[256/4];
                 struct binder_io msg;
@@ -281,14 +257,11 @@ int binder_parse(struct binder_state *bs, struct binder_io *bio,
                 int res;
 
                 bio_init(&reply, rdata, sizeof(rdata), 4);
-                bio_init_from_txn(&msg, &txn.transaction_data);
-                res = func(bs, &txn, &msg, &reply);
-                if (txn.transaction_data.flags & TF_ONE_WAY) {
-                    binder_free_buffer(bs, txn.transaction_data.data.ptr.buffer);
-                } else {
-                    binder_send_reply(bs, &reply, txn.transaction_data.data.ptr.buffer, res);
-                }
+                bio_init_from_txn(&msg, txn);
+                res = func(bs, txn, &msg, &reply);
+                binder_send_reply(bs, &reply, txn->data.ptr.buffer, res);
             }
+            ptr += sizeof(*txn);
             break;
         }
         case BR_REPLY: {
@@ -492,7 +465,7 @@ static void *bio_alloc(struct binder_io *bio, size_t size)
 }
 
 void binder_done(struct binder_state *bs,
-                 __unused struct binder_io *msg,
+                 struct binder_io *msg,
                  struct binder_io *reply)
 {
     struct {
@@ -540,7 +513,7 @@ void bio_put_obj(struct binder_io *bio, void *ptr)
         return;
 
     obj->flags = 0x7f | FLAT_BINDER_FLAG_ACCEPTS_FDS;
-    obj->hdr.type = BINDER_TYPE_BINDER;
+    obj->type = BINDER_TYPE_BINDER;
     obj->binder = (uintptr_t)ptr;
     obj->cookie = 0;
 }
@@ -558,7 +531,7 @@ void bio_put_ref(struct binder_io *bio, uint32_t handle)
         return;
 
     obj->flags = 0x7f | FLAT_BINDER_FLAG_ACCEPTS_FDS;
-    obj->hdr.type = BINDER_TYPE_HANDLE;
+    obj->type = BINDER_TYPE_HANDLE;
     obj->handle = handle;
     obj->cookie = 0;
 }
@@ -675,7 +648,7 @@ uint32_t bio_get_ref(struct binder_io *bio)
     if (!obj)
         return 0;
 
-    if (obj->hdr.type == BINDER_TYPE_HANDLE)
+    if (obj->type == BINDER_TYPE_HANDLE)
         return obj->handle;
 
     return 0;

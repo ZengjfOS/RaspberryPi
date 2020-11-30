@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <stdint.h>
 
 #include "binder.h"
 
@@ -96,6 +97,8 @@ int main(int argc, char **argv)
             svcmgr_publish(bs, svcmgr, argv[1], &token);
             argc--;
             argv++;
+
+            while(1);
         } else {
             fprintf(stderr,"unknown command %s\n", argv[0]);
             return -1;

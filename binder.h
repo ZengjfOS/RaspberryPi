@@ -4,7 +4,7 @@
 #ifndef _BINDER_H_
 #define _BINDER_H_
 
-#include <linux/android/binder.h>
+#include "driver/binder/binder.h"
 #include <sys/ioctl.h>
 
 struct binder_state;
@@ -42,7 +42,7 @@ enum {
 };
 
 typedef int (*binder_handler)(struct binder_state *bs,
-                              struct binder_transaction_data_secctx *txn,
+                              struct binder_transaction_data *txn,
                               struct binder_io *msg,
                               struct binder_io *reply);
 
