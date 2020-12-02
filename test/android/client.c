@@ -5,11 +5,16 @@
 #include <linux/types.h>
 #include <stdbool.h>
 #include <string.h>
+#include <time.h>
+#include <unistd.h>
 
 #include "binder.h"
 
 #define SVR_CMD_ADD_ONE         0
 #define SVR_CMD_REDUCE_ONE      1
+
+#define LOG_TAG "TimeDelayTestClient"
+#include <cutils/log.h>
 
 int addone(int n);
 int reduceone(int n);
@@ -18,15 +23,26 @@ uint32_t svcmgr_lookup(struct binder_state *bs, uint32_t target, const char *nam
 struct binder_state *g_bs;
 uint32_t g_handle;
 
+#include <sys/time.h>
+
+long long current_timestamp(int flag) {
+    struct timeval te; 
+    gettimeofday(&te, NULL); // get current time
+    long long milliseconds = te.tv_sec*1000LL + te.tv_usec/1000; // calculate milliseconds
+
+    ALOGE("%s milliseconds: %lld\n", flag ? "end" : "start",  milliseconds);
+    return milliseconds;
+}
+
 int main(int argc, char **argv)
 {
-	int fd;
 	struct binder_state *bs;
 	uint32_t svcmgr = BINDER_SERVICE_MANAGER;
 	uint32_t handle;
 	int ret;
+	
 	/* 一样的，先打开 Binder 驱动 */
-	bs = binder_open("/dev/binder", 128*1024);
+	bs = binder_open(128*1024);
 	if (!bs) {
 		fprintf(stderr, "failed to open binder driver\n");
 		return -1;
@@ -41,10 +57,14 @@ int main(int argc, char **argv)
 	g_handle = handle;
 	/* send data to server */
 	if (!strcmp(argv[1], "a")) {
+		current_timestamp(0);
 		ret = addone(atoi(argv[2]));
+		current_timestamp(1);
 		fprintf(stderr, "get ret of addone= %d\n", ret);
 	} else if (!strcmp(argv[1], "r")) {
+		current_timestamp(0);
 		ret = reduceone(atoi(argv[2]));
+		current_timestamp(1);
 		fprintf(stderr, "get ret of reduceone= %d\n", ret);
 	}
 	/* Client 使用完就释放服务 */
