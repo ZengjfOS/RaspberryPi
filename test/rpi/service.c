@@ -13,6 +13,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include "binder.h"
+#include <unistd.h>
 
 uint32_t addone(uint32_t n);
 uint32_t reduceone(uint32_t n);
@@ -108,6 +109,7 @@ int service_handler(struct binder_state *bs,
 uint32_t addone(uint32_t n)
 {
 	fprintf(stderr, "i am server,add one %d\n", n);
+	usleep(5 * 1000 * 1000);
 	return ++n;
 }
 uint32_t reduceone(uint32_t n)
