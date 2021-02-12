@@ -88,7 +88,7 @@ emergency       | emergency.target	                    | 急救模式（Emergenc
   * Loaded: loaded (/lib/systemd/system/rc-local.service; enabled-runtime; vendor preset: enabled)
     * /lib/systemd/system/rc-local.service
   * Active: active (exited) since Thu 2021-02-11 08:08:35 GMT; 6h ago
-* ![0008_rc-local_call_route.png](images/0008_rc-local_call_route.png)
+* ![0007_rc-local_call_route.png](images/0007_rc-local_call_route.png)
 
 ## Wifi配置启动分析
 
