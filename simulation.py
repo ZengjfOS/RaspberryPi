@@ -20,7 +20,7 @@ class VideoCamera(object):
         image.fill(self.color)
 
         # 更新下次颜色
-        self.color += 2
+        self.color += 4
         if self.color > 255:
             self.color = 0
 
