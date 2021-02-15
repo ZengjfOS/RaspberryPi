@@ -8,6 +8,11 @@
 
 NO.|文件名称|摘要
 :--:|:--|:--
+0013| [开机自动发IP信息邮件](docs/0013_开机自动发IP信息邮件.md) | Python3自动发邮件
+0012| [dtparam_dtoverlay_DTS动态设备树](docs/0012_dtparam_dtoverlay_DTS动态设备树.md) | 分析dtparam/dtoverlay本质，为什么能够动态改变设备与驱动的match
+0011| [SoC设备树DTS分析](docs/0011_SoC设备树DTS分析.md) | 怎么分析芯片设备树
+0010| [Tmux_Vim_Ctags_Cscope代码分析](docs/0010_Tmux_Vim_Ctags_Cscope代码分析.md) | 在Linux命令行如何阅读代码？
+0009| [USB摄像头搭建IP网络摄像头](docs/0009_USB摄像头搭建IP网络摄像头.md) | 使用USB Camera搭建IP Camera，理解IP Camera工作原理
 0008| [USB摄像头分析udev加载驱动原理](docs/0008_USB摄像头分析udev加载驱动原理.md) | 使用USB Camera分析udev加载驱动原理，理解udev工作原理
 0007| [Systemd进程启动](docs/0007_Systemd进程启动.md) | 分析Linux系统进程何启动起来
 0006| [搭建samba服务端](docs/0006_搭建samba服务端.md) | 像访问普通文件夹一样访问树莓派文件系统
