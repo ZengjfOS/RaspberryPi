@@ -2,12 +2,17 @@
 
 个人认为，树莓派应该算是目前开源硬件里学习嵌入式Linux系统最好的工具，里面的设计思路和一些工具是很值得借鉴的，这里主要使用Raspberry Pi 4B进行系统架构分析。
 
+## 40 Pin引脚
+
+![Shematic_RPI_40_Pin.png](docs/images/Shematic_RPI_40_Pin.png)
+
 ## Refers
 
 ## docs
 
 NO.|文件名称|摘要
 :--:|:--|:--
+0014| [动态设备树GPIO控制LED](docs/0014_动态设备树GPIO控制LED.md) | 通过使用动态改变设备树，使用内核gpio-poweroff驱动实现LED控制
 0013| [开机自动发IP信息邮件](docs/0013_开机自动发IP信息邮件.md) | Python3自动发邮件
 0012| [dtparam_dtoverlay_DTS动态设备树](docs/0012_dtparam_dtoverlay_DTS动态设备树.md) | 分析dtparam/dtoverlay本质，为什么能够动态改变设备与驱动的match
 0011| [SoC设备树DTS分析](docs/0011_SoC设备树DTS分析.md) | 怎么分析芯片设备树
