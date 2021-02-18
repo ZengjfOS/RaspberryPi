@@ -5,5 +5,5 @@ all:
 	gcc test/rpi/service.c binder.c -o service -I.
 
 clean:
-	bctest servicemanager client service cpu
+	rm bctest servicemanager client service
 
