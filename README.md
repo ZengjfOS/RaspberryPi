@@ -255,3 +255,56 @@
       return status;
   }
   ```
+
+## Android版本导致的bctest无法使用补丁
+
+* https://android.googlesource.com/platform/frameworks/native/+/refs/heads/android10-mainline-release/cmds/servicemanager/service_manager.c#283
+  ```
+  // Equivalent to Parcel::enforceInterface(), reading the RPC
+  // header with the strict mode policy mask and the interface name.
+  // Note that we ignore the strict_policy and don't propagate it
+  // further (since we do no outbound RPCs anyway).
+  strict_policy = bio_get_uint32(msg);
+  bio_get_uint32(msg);  // Ignore worksource header.      <--------------------
+  s = bio_get_string16(msg, &len);
+  if (s == NULL) {
+      return -1;
+  }
+  ```
+* 通信协议里面多加了一个uint32，导致servicemanager数据获取处理出错：
+  ```diff
+  diff --git a/frameworks/native/cmds/servicemanager/bctest.c b/frameworks/native/cmds/servicemanager/bctest.c
+  index 354df670e54..782bf29e958 100644
+  --- a/frameworks/native/cmds/servicemanager/bctest.c
+  +++ b/frameworks/native/cmds/servicemanager/bctest.c
+  @@ -16,6 +16,7 @@ uint32_t svcmgr_lookup(struct binder_state *bs, uint32_t target, const char *nam
+
+       bio_init(&msg, iodata, sizeof(iodata), 4);
+       bio_put_uint32(&msg, 0);  // strict mode header
+  +    bio_put_uint32(&msg, 0);
+       bio_put_string16_x(&msg, SVC_MGR_NAME);
+       bio_put_string16_x(&msg, name);
+
+  @@ -40,6 +41,7 @@ int svcmgr_publish(struct binder_state *bs, uint32_t target, const char *name, v
+
+       bio_init(&msg, iodata, sizeof(iodata), 4);
+       bio_put_uint32(&msg, 0);  // strict mode header
+  +    bio_put_uint32(&msg, 0);
+       bio_put_string16_x(&msg, SVC_MGR_NAME);
+       bio_put_string16_x(&msg, name);
+       bio_put_obj(&msg, ptr);
+  @@ -93,9 +95,12 @@ int main(int argc, char **argv)
+                   fprintf(stderr,"argument required\n");
+                   return -1;
+               }
+  +            fprintf(stderr,"published: [%s]\n", argv[1]);
+               svcmgr_publish(bs, svcmgr, argv[1], &token);
+               argc--;
+               argv++;
+  +
+  +            while(1);
+           } else {
+               fprintf(stderr,"unknown command %s\n", argv[0]);
+               return -1;
+  ```
+
