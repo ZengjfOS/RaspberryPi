@@ -1,0 +1,41 @@
+<html>
+
+  <head>
+
+    <title>IP Camera</title>
+
+    <script type="text/javascript">
+      function setValue() {
+          var setValue = document.getElementById('setValue');
+          console.log(setValue);
+
+          var request = new XMLHttpRequest();
+          request.open('GET', "led?setValue=" + setValue.value);
+          request.onreadystatechange = function(){
+              if(request.readyState === 4 && request.status === 200){
+
+                  if (setValue.value == "Led On")
+                      setValue.value = "Led Off";
+                  else
+                      setValue.value = "Led On";
+
+                  console.log(request);
+              }
+          };
+          request.send(null);
+      }
+    </script>
+
+  </head>
+
+  <body>
+
+    <div>
+      <input id="setValue" type="button" onclick="setValue()" value="Led On" />
+    </div>
+
+    <img src="{{ url_for('video_feed') }}">
+
+  </body>
+
+</html>
