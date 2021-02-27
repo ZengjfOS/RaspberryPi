@@ -12,6 +12,7 @@
 
 NO.|文件名称|摘要
 :--:|:--|:--
+0018| [利用AT24C02_EEPROM理解I2C通信](docs/0018_利用AT24C02_EEPROM理解I2C通信.md) | 利用Overlay加载AT24C02 I2C驱动，通过i2c-tools获取数据
 0017| [GPIO中断模式控制网页](docs/0017_GPIO中断模式控制网页.md) | 通过Python3 Flask/websocket作为服务端，使用GPIO控制网页背景
 0016| [IoT网页GPIO控制LED](docs/0016_IoT网页GPIO控制LED.md) | 通过Python3 Flask作为HTTP服务端，控制GPIO
 0015| [用户空间控制GPIO](docs/0015_用户空间控制GPIO.md) | 通过使用内核GPIO Sysfs Interface在用户空间控制LED
