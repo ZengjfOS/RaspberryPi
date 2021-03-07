@@ -18,9 +18,9 @@
   vamp-plugin-sdk - audio analysis and feature extraction plugins (SDK)
   ```
 * sudo apt-get install audacity
-* [示例源代码](https://github.com/ZengjfOS/RaspberryPi/tree/wavefile)
+* [示例源代码](https://github.com/LowLevelOfLogic/RaspberryPi/tree/wavfile)
   * make
-* 设置为耳机输出声音，注意关闭远程桌面进行设置：sudo rasp-config
+* 设置为耳机输出声音，注意关闭远程桌面进行设置：sudo raspi-config
   * System Options
     * Audio
       * 0 Headphones
