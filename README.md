@@ -12,6 +12,7 @@
 
 NO.|文件名称|摘要
 :--:|:--|:--
+0022| [SD卡自动扩容](docs/0022_SD卡自动扩容.md) | 理解SD卡自动扩容工作原理
 0021| [wav声音PCM数据分析](docs/0021_wav声音PCM数据分析.md) | 通过wav文件了解PCM数据
 0020| [Android_Binder通信](docs/0020_Android_Binder通信.md) | 在树莓派中理解Android Binder通信
 0019| [USB_OTG虚拟串口](docs/0019_USB_OTG虚拟串口.md) | USB OTG虚拟串口，可用于学习串口通信
