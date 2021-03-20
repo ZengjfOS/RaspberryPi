@@ -12,6 +12,7 @@
 
 NO.|文件名称|摘要
 :--:|:--|:--
+0023| [关于如何学习](docs/0023_关于如何学习.md) | 记录是最好的反思
 0022| [SD卡自动扩容](docs/0022_SD卡自动扩容.md) | 理解SD卡自动扩容工作原理
 0021| [wav声音PCM数据分析](docs/0021_wav声音PCM数据分析.md) | 通过wav文件了解PCM数据
 0020| [Android_Binder通信](docs/0020_Android_Binder通信.md) | 在树莓派中理解Android Binder通信
