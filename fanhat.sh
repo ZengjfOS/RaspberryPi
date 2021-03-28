@@ -45,7 +45,7 @@ if [ ! -d "${PWM_BASE_PATH}/pwm${PWM_NUM}" ];then
 	fi
 
 	# 如果你手动unexport的情况下，复位enable是必须的
-	echo 0 > ${PWM_BASE_PATH}/pwm${PWM_NUM}/enable
+	# echo 0 > ${PWM_BASE_PATH}/pwm${PWM_NUM}/enable
 
 	echo "export pwm${PWM_NUM} success"
 fi
@@ -55,6 +55,7 @@ CURRENT_DUTY_CYCLE=$((PERIOD_DEFAULT_VALUE / 100 * ${CURRENT_DUTY_CYCLE_DIV}))
 cd "${PWM_BASE_PATH}/pwm${PWM_NUM}"
 echo ${PERIOD_DEFAULT_VALUE} > period
 echo ${CURRENT_DUTY_CYCLE} > duty_cycle
+echo 0 > enable
 echo 1 > enable
 
 echo "FAN work at:"
